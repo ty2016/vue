@@ -1,0 +1,172 @@
+
+<!-- model view viewModel dataBindings -->
+<html>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+    [v-cloak]{
+        display: none;
+    }
+    .divs{
+        border: red 1px solid;
+        padding: 1em;
+    }
+    .act{
+        color: red;
+    }
+    h1{cursor: pointer;}
+    </style>
+    <body>
+       
+        <div id="app" v-cloak  :class="getClasses()">
+            <cpn></cpn>
+            <cpn></cpn>
+            <H3>总价格{{total}}</H3>
+            <h1 @click="aa" @click="bb" :class="getCl()">{{message}}</h1>
+            <h2 v-once>{{message}}</h2>
+            <img :src="imgurl" width=400 height=300>
+      <ul >
+          <li v-for=" (item,index) in movies">{{index}}-{{item}}</li>
+      </ul>
+        </div>
+        <template id="cpn">
+            <div>
+                <H3>当前计数:{{counter}}</H3>
+                <button @click="increment">+</button>
+                <button @click="decrement">-</button>
+            </div>
+          
+        </template>
+       
+<script>
+ ~ function(){
+            function check(n){
+                n=Number(n)
+                return isNaN(n)?0:n;
+            }
+            function add(n){
+              return this+check(n);
+            }
+            function minus(n){
+                return this-check(n);
+            }
+            ["add","minus"].forEach(element => {
+                Number.prototype[element]=eval(element)
+            });
+
+}()
+
+// (function(){
+
+// })();
+
+console.log((5).add(3).minus(5))
+let str="AHUDHDwecnddafsdf你好啊，009883443543,HAHA";
+console.log(str)
+str=str.replace(/[a-zA-Z]/g,content=>{
+ return content.toUpperCase()===content?content.toLowerCase():content.toUpperCase();
+})
+
+console.log(str)
+function fn(x,y,z){
+console.log(this)
+}
+let arr=[10,20,30],
+           obj={aa:"12",bb:333};
+           fn();
+fn.apply(obj,arr)
+        console.log("----------------------")
+        console.log(Object.getOwnPropertyNames(obj).length);
+        // this.outputObj(obj);
+      
+    setTimeout(() => {
+        Vue.component('cpn',{
+      template:"#cpn",
+      data(){
+          return {
+              counter:0
+          }
+      },
+      methods:{
+          increment(){
+            this.counter++
+          },
+          decrement(){
+              this.counter--
+          }
+      }
+    })
+        var vm = new Vue({
+       el:'#app',
+       data:{
+           message:'你好啊',
+           movies:[
+           "111","222","333","444"
+           ],
+           imgurl:"http://static.runoob.com/images/demo/demo2.jpg",
+           isActive:true,
+           isDivs:true,
+           isAct:false,
+           books:[
+               {id:110,name:"unix111",price:112},
+               {id:111,name:"unixw",price:103},
+               {id:112,name:"unix1",price:88},
+               {id:113,name:"unix13",price:46},
+           ],
+           arr:[10,20,30],
+           obj:{},
+           n:0
+       },
+       ready:function(){
+        this.movies.push('你好222')
+       },
+       methods:{
+        aa(){
+           this.message="哈哈哈"
+           this.isAct=!this.isAct
+        //    this.isDivs=!this.isDivs
+        },
+        bb(){
+            
+        },
+        getClasses(){
+            return {divs:this.isDivs,act:this.isAct};
+        },
+        getCl(){
+            return {act:this.isAct}; 
+        },
+        outputObj(obj) {
+            var description = "";
+            for (var i in obj) {
+                description += i + " = " + obj[i] + "\n";
+            }
+            return description;
+      }
+       },
+     
+       created: function () {
+        // var arr2 = new Array(3)
+        // arr2[0] = "aaa"
+        // arr2[1] = "bbb"
+        // this.movies.concat(arr2)
+        this.movies.push('你好')
+    // `this` 指向 vm 实例
+        console.log(this.movies)
+      
+
+       
+  },
+  computed:{
+             total:function(){
+                 let result=0;
+                for(let i in this.books){
+                    result+=this.books[i].price
+                }
+                return result;
+             }
+       },
+     })
+    }, 200);
+ 
+</script>
+ </body>
+ </html>
