@@ -1,5 +1,6 @@
 
 <!-- model view viewModel dataBindings -->
+<!-- props $emit Event   向子组件之间传递数据 -->
 <html>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <style>
@@ -13,13 +14,26 @@
     .act{
         color: red;
     }
+    ul{
+        padding: 2px;
+    }
+    ul li{
+        list-style: none;
+        padding: 2px;
+    }
+    ul li a{
+        cursor: pointer;
+    }
+    a:hover {color: #FF00FF}
     h1{cursor: pointer;}
     </style>
     <body>
        
         <div id="app" v-cloak  :class="getClasses()">
-            <cpn></cpn>
-            <cpn></cpn>
+            <!-- //菜单  父组件模板-->
+            <menus @item-click="menuclick" ></menus>
+            <cpn :cmovies="movies" :cmessages="message"></cpn>
+            <cpn :cmovies="movies"></cpn>
             <H3>总价格{{total}}</H3>
             <h1 @click="aa" @click="bb" :class="getCl()">{{message}}</h1>
             <h2 v-once>{{message}}</h2>
@@ -30,13 +44,23 @@
         </div>
         <template id="cpn">
             <div>
+               <ul>
+                   <li v-for="item in cmovies">{{item}}</li>
+               </ul>
+            <p>{{cmessages}}</p>
                 <H3>当前计数:{{counter}}</H3>
                 <button @click="increment">+</button>
                 <button @click="decrement">-</button>
             </div>
           
         </template>
-       
+        <template id="menus" >
+        <div>
+            <ul>
+                <li v-for="item in categories" @click="btnClick(item)"><a>{{item.name}}</a></li>
+            </ul>
+        </div>
+        </template>
 <script>
  ~ function(){
             function check(n){
@@ -79,8 +103,18 @@ fn.apply(obj,arr)
         // this.outputObj(obj);
       
     setTimeout(() => {
+        //父传子 props
         Vue.component('cpn',{
       template:"#cpn",
+      props:{
+          cmovies:this.movies,
+         cmessages:{
+             type:String,
+             default:"你好啊。我在这里啊啊",
+             require:true
+         }
+
+      },
       data(){
           return {
               counter:0
@@ -95,13 +129,34 @@ fn.apply(obj,arr)
           }
       }
     })
+
+    Vue.component('menus',{
+      template:"#menus",
+      data(){
+          return {
+            categories:[
+              {id:'1',name:'热门推荐'},
+              {id:'2',name:'手机数码'},
+              {id:'3',name:'家用家电'},
+              {id:'4',name:'电脑办公'}
+              ]
+          }
+      },
+         
+      methods:{
+          btnClick(items){
+              this.$emit("item-click",items)
+            //   console.log(items.name)
+          }
+      }
+      })
+
+
         var vm = new Vue({
        el:'#app',
        data:{
-           message:'你好啊',
-           movies:[
-           "111","222","333","444"
-           ],
+           message:'',
+           movies:['孙悟空','猪八戒','沙僧','唐僧'],
            imgurl:"http://static.runoob.com/images/demo/demo2.jpg",
            isActive:true,
            isDivs:true,
@@ -116,10 +171,18 @@ fn.apply(obj,arr)
            obj:{},
            n:0
        },
+       component:{
+           cpn
+       },
        ready:function(){
         this.movies.push('你好222')
        },
        methods:{
+        //    子组件触发方法执行
+        menuclick(item){
+        // console.log(item)
+        alert(item.id+'---'+item.name)
+           },
         aa(){
            this.message="哈哈哈"
            this.isAct=!this.isAct
@@ -148,7 +211,7 @@ fn.apply(obj,arr)
         // arr2[0] = "aaa"
         // arr2[1] = "bbb"
         // this.movies.concat(arr2)
-        this.movies.push('你好')
+        this.movies.push('你好啊--------------')
     // `this` 指向 vm 实例
         console.log(this.movies)
       
